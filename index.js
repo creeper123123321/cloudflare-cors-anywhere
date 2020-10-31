@@ -9,8 +9,10 @@ https://github.com/Zibri/cloudflare-cors-anywhere
 whitelist = [ "^http.?://www.zibri.org$", "zibri.org$", "test\\..*" ];  // regexp for whitelisted urls
 */
 
-blacklist = [ ];           // regexp for blacklisted urls
-whitelist = [ ".*" ];     // regexp for whitelisted origins
+//blacklist = [ ];           // regexp for blacklisted urls
+//whitelist = [ ".*" ];     // regexp for whitelisted origins
+whitelist = [ "^https://.*" ];
+blacklist = [ "^(?!https://(auth|session)server\\.mojang\\.com/).*" ];
 
 function isListed(uri,listing) {
     var ret=false;
@@ -66,8 +68,8 @@ addEventListener("fetch", async event=>{
                 for (var pair of event.request.headers.entries()) {
                     if ((pair[0].match("^origin") == null) && 
 			(pair[0].match("eferer") == null) && 
-			(pair[0].match("^cf-") == null) && 
-			(pair[0].match("^x-forw") == null) && 
+			//(pair[0].match("^cf-") == null) &&      - Keep Cloudflare headers
+			//(pair[0].match("^x-forw") == null) &&   - Keep X-forwarded-for
 			(pair[0].match("^x-cors-headers") == null)
 		    ) recv_headers[pair[0]] = pair[1];
                 }
